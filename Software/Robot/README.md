@@ -1,4 +1,4 @@
-# CAST Software
+# CAST Software - Robot
 
 This contains all the software used on our Capstone Team's robot
 
