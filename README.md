@@ -8,6 +8,7 @@ By incorporating lidar into our design we’re paving the way for the robot to b
 
 ## Directories
 To view the Hardware CAD models, one must have a CAD modeling program that SUPPORTS .SLDPRT
+
 The Software is split into two sections. The first section is the Robots Software, that is run on a Raspberry Pi. It uses Python coding to control the system. The second section is the UV Sensor, it uses an Ardiuno Nano and is controlled by C++ codes.
 
 ## Special Thanks
