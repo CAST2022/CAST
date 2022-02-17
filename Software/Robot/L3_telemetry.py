@@ -70,6 +70,7 @@ while True:
         bottomsensor = tof(21, active_high=True)
         time.sleep(0.50)
         bottomsensor.start_ranging(VL53L0X.Vl53l0xAccuracyMode.BETTER)
+        C = bottomesensor.get_distance()
         if C>20:
             motor.backward()
             if C<20:
@@ -80,6 +81,7 @@ while True:
         bottomsensor = tof(21, active_high=True)
         time.sleep(0.50)
         bottomsensor.start_ranging(VL53L0X.Vl53l0xAccuracyMode.BETTER)
+        C = bottomesensor.get_distance()
         if C>20:
             motor.backward()
             if C<20:
