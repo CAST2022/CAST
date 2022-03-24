@@ -81,7 +81,7 @@ float smoothing()
   total = 0;
   for (int count = 0; count < 199; count++)
   {
-    readings = analogRead(A0)-8; //Reading inputs, subtractting to offset noise
+    readings = analogRead(A0)-11; //Reading inputs, subtractting to offset noise
     total = total + readings; //total readings together
   }
   // calculate the average, Converts Photocurrent Value to UV Intensity, uW/cm^2 (1uA = 9 mW/cm^2)
