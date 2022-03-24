@@ -1,4 +1,7 @@
 //Test UV Sensor and what value we get from UV Light
+//UV Dose needs to reach:
+const int UVDoseRequirement = 3.7;
+
 //Ports for lights
 const int red = 5;
 const int green = 4;
@@ -60,7 +63,7 @@ void loop()
     MainCounter += 1;
     UVDose = (MainCounter * Average) / 1000;
 
-    if (UVDose > 3.7) //Value you would need to change for threshold 
+    if (UVDose > UVDoseRequirement) //Value you would need to change for threshold 
     {
       Finished = 1;
       break;
