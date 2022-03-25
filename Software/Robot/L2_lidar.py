@@ -30,17 +30,18 @@ try:
         # Filters the data to be read between angles 219 and 360 from the core of the Lidar 
         if angle > 219 and angle < 360 and angle != 0:
             # Distance is in mm
-            if distance > 500 and distance != 0:
-                # Similates turning off the UV LEDs
+            # This if statement is important to control the UV LEDs
+            # When the Lidar detects an object further than the length of the arm (508 mm) the program will turn off the UV LEDs
+            if distance > 508 and distance != 0:
+                # Simulates turning off the UV LEDs
                 GPIO.output(18,GPIO.LOW)
-                # print(distance)
-                # print(angle)
+                # Prints that the the robot is far from the table
                 print("far")
-            if distance <= 500 and distance != 0:
+            # When the Lidar detects an object within the length of the arm, the program will turn on the UV LEDs
+            if distance <= 508 and distance != 0:
                 # Simulates turning on the UV LEDs
                 GPIO.output(18,GPIO.HIGH)
-                # print(distance)
-                # print(angle)
+                # Prints that the the robot is within table range
                 print("close")
                 
         else:
