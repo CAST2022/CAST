@@ -1,10 +1,13 @@
+# Rplidar program for communicating with UV LEDs
+# This code sends power to the power relay on the appropriate GPIO pins for turning on the UV LEDs
+# Last update 3/25/2022 - Edgar Macias
+
 import os
 import sys
 import time
 import RPi.GPIO as GPIO
 import adafruit_rplidar as raslidar
 from math import cos, sin, pi, floor
-# from adafruit_rplidar import RPLidar,DEFAULT_MOTOR_PWM
 
 #Setup LEDs
 GPIO.setmode(GPIO.BCM)
@@ -21,7 +24,7 @@ scan_data_distance = [0] * 360
 
 # Continuously runs at all times, unless keyboard interrupts the program
 try:
-    #    print(lidar.get_info())
+    # print(lidar.get_info())
     for scan in lidar.iter_scans():
         for (_, angle, distance) in scan:
             scan_data_angle[min([359, floor(angle)])] = angle
@@ -35,15 +38,10 @@ try:
             if distance > 508 and distance != 0:
                 # Simulates turning off the UV LEDs
                 GPIO.output(18,GPIO.LOW)
-                # Prints that the the robot is far from the table
-                print("far")
             # When the Lidar detects an object within the length of the arm, the program will turn on the UV LEDs
             if distance <= 508 and distance != 0:
                 # Simulates turning on the UV LEDs
                 GPIO.output(18,GPIO.HIGH)
-                # Prints that the the robot is within table range
-                print("close")
-                
         else:
             pass
 # Is included to safely turn off the Lidar system
