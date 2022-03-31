@@ -411,8 +411,8 @@ class RPLidar:
         self._send_cmd(RESET_BYTE)
         time.sleep(0.002)
         self.clear_input()
-
-    def iter_measurements(
+##### Used by the CAST Team ####
+    def iter_measurements( 
         self, max_buf_meas: int = 500, scan_type: int = SCAN_TYPE_NORMAL
     ) -> Iterator[Tuple[bool, Optional[int], float, float]]:
         """Iterate over measurements. Note that consumer must be fast enough,
