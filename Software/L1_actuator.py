@@ -11,10 +11,10 @@ from gpiozero import PWMOutputDevice as pwm
 import time
 from time import sleep
 
-# Setup GPIO pins as output pins (probably could change to generic output deivce and use toggle)
-en = LED(26)	    	    # enable pin always on
+# Setup GPIO pins as output pins
+en = LED(26)	    	# enable pin always on
 dir = LED(19)  		    # direction GPIO pin - on = cw (up), off = ccw(down)
-step = LED(13)  	    # step GPIO pin
+step = LED(13)  		# step GPIO pin
 
 # Endstop pin assignment for integration of endstops as they are included on actuator
 topEndStop = Button(6)
@@ -22,12 +22,15 @@ botEndStop = Button(5)
 
 # Set of parameters preset by user determined by actuator used
 linearDistancePerRev = 0.00508  # value determined by actuator screw (m)
-stepsPerRev = 800               # steps per revolution per driver
-maxMotorSpeed = 1100            # max motor speed in RPM
-maxLinearSpeed = 0.01           # maximum speed in RPM by motor datasheet
+stepsPerRev = 800              # steps per revolution per driver
+maxMotorSpeed = 725             # max motor speed in RPM
+maxBackMotorSpeed = 725
 
 # Calculate minimum delay for pulse
-minDelay = 1/(maxMotorSpeed/60*stepsPerRev)/2
+minDelay = 1/9600/2             # 9.6kHz is the desired frequnecy so 1/f should give period of wave and divided by 2 should give length of delay between steps.
+backDelay = 1/9600/2
+
+print(minDelay,backDelay)
 
 
 step.off()
@@ -39,17 +42,18 @@ en.off()
 
 
 # Move arm in a specified direct at specified speed
-def move(dist, dir, speed = maxLinearSpeed):
+def move(dist, dirs, speed = maxMotorSpeed):
+
     
     # Set direction based on input
-    if (dir == "up"):
-        dir.off()
-    else:
+    if (dirs == 1):
         dir.on()
+    else:
+        dir.off()
         
     # Calcualte the delay required for specified speed and steps required
     steps = dist/linearDistancePerRev*stepsPerRev
-    delay = 1/(speed/linearDistancePerRev*stepsPerRev)/2
+    delay = 1/(speed/60*stepsPerRev)/2
     
     
     for x in range(int(steps)): 
@@ -62,7 +66,7 @@ def move(dist, dir, speed = maxLinearSpeed):
 def reset():
     rev = 20
     
-    dir.on()  # switch directions
+    dir.off()  # switch directions
     en.off()
     
     #Calculate steps
@@ -72,43 +76,42 @@ def reset():
         if botEndStop.is_pressed:
             break
         step.on()
-        sleep(minDelay)
+        sleep(backDelay)
         step.off()
-        sleep(minDelay)
+        sleep(backDelay)
         
 
 
 
 if __name__ == "__main__":
 
-    dir.off()                            # set direction to clockwise
+    dir.on()                            # set direction to clockwise
     en.off()
     
     # Set delay to maximum speed of motor and rotate fixed number of revolutions
-    rev = 20
+    rev = 40
     
     #Calculate steps
     steps = rev * stepsPerRev
 
-    for x in range(steps):          # rotate one full revolution up checking endstops after steps
+    for x in range(steps):          # rotate number of revolutions up checking endstops after steps
+    
         if topEndStop.is_pressed:
             break
+        sleep(minDelay)
         step.on()
         sleep(minDelay)
         step.off()
-        sleep(minDelay)
 
 
-    dir.on()  # switch directions
+    dir.off()  # switch directions
 
-    for x in range(steps):  # rotate one revolution full checking endstops after steps
+    for x in range(steps):          # rotate number of revolutions down checking endstops after steps
         if botEndStop.is_pressed:
             break
+        sleep(backDelay)
         step.on()
-        sleep(minDelay)
+        sleep(backDelay)
         step.off()
-        sleep(minDelay)
         
     en.on()
-
-
