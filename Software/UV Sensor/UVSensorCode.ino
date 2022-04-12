@@ -81,7 +81,8 @@ float smoothing()
   total = 0;
   for (int count = 0; count < 199; count++)
   {
-    readings = (analogRead(A0)-3)*4; //Reading inputs, subtractting to offset noise, multiply by 4 because the responisivity at 260nm is 1/4 for this sensor
+    readings = (analogRead(A0)-3)*40; //Reading inputs, subtractting to offset noise
+    //multiply by 4 because the responisivity at around 260nm is 1/4 for this sensor. Multiply by 10 to convert to mW, as per the spec sheet
     total = total + readings; //total readings together
   }
   // calculate the average, Converts Photocurrent Value to UV Intensity, mW/cm^2 (1uA = 9 mW/cm^2)
