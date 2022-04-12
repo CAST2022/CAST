@@ -1,6 +1,6 @@
 //Test UV Sensor and what value we get from UV Light
 //UV Dose needs to reach:
-const int UVDoseRequirement = 3.7;
+const int UVDoseRequirement = 15; // 15 mJ/cm^2 is the UV dose needed for bacteria on most surfaces
 
 //Ports for lights
 const int red = 5;
@@ -30,8 +30,8 @@ void setup()
 
 void loop()
 {
-  //loop to signify UV is in area. Under 60 mW/cm^2 indicates no UV
-  while (Average < 60 && Finished != 1)
+  //loop to signify UV is in area. Under 150 mW/cm^2 indicates no UV
+  while (Average < 150 && Finished != 1)
   {
     smoothing(); //input function
 
@@ -50,7 +50,7 @@ void loop()
     }
   }
 
-  while (Average >= 60 && Finished != 1) //60 mW/cm^2 is the minimum for UV intensity to blink green LED
+  while (Average >= 150 && Finished != 1) //150 mW/cm^2 is the minimum for UV intensity to blink green LED
   {
     smoothing();
     Reset = 0;
@@ -63,7 +63,7 @@ void loop()
     MainCounter += 1;
     UVDose = (MainCounter * Average) / 1000;
 
-    if (UVDose > UVDoseRequirement) //Value you would need to change for threshold 
+    if (UVDose > UVDoseRequirement) //When value is reached, the code stays on green on.
     {
       Finished = 1;
       break;
@@ -81,10 +81,10 @@ float smoothing()
   total = 0;
   for (int count = 0; count < 199; count++)
   {
-    readings = analogRead(A0)-11; //Reading inputs, subtractting to offset noise
+    readings = (analogRead(A0)-3)*4; //Reading inputs, subtractting to offset noise, multiply by 4 because the responisivity at 260nm is 1/4 for this sensor
     total = total + readings; //total readings together
   }
-  // calculate the average, Converts Photocurrent Value to UV Intensity, uW/cm^2 (1uA = 9 mW/cm^2)
+  // calculate the average, Converts Photocurrent Value to UV Intensity, mW/cm^2 (1uA = 9 mW/cm^2)
   Average = ((total / numReadings) * 9);
   return (Average);
 }
