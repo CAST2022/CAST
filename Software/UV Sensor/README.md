@@ -13,7 +13,7 @@ If a user knows the specific type of surface the sensor will be placed on, the v
 
 https://cdn-shop.adafruit.com/datasheets/1918guva.pdf
 
-The specifications sheet above shows the conversions needed to get the input converted to UV intensity
+The specifications sheet above shows the conversions needed to get the input converted to UV intensity.
 
 
 ## License
