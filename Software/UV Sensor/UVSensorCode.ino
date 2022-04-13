@@ -31,7 +31,7 @@ void setup()
 
 void loop()
 {
-  //loop to signify UV is in area. Under 150 mW/cm^2 indicates no UV
+  //loop to signify UV is in area. Under 300 uW/cm^2 indicates no UV
   while (Average < 300 && Finished != 1)
   {
     smoothing(); //input function
@@ -51,7 +51,7 @@ void loop()
     }
   }
 
-  while (Average >= 300 && Finished != 1) //150 uW/cm^2 is the minimum for UV intensity to blink green LED
+  while (Average >= 300 && Finished != 1) //300 uW/cm^2 is the minimum for UV intensity to blink green LED
   {
     smoothing();
     Reset = 0;
@@ -84,12 +84,10 @@ float smoothing()
   {
     readings = analogRead(A0)-2; //Reading inputs, subtractting to offset noise
     readings = readings*50;
-    //multiply by 5 because the responisivity at around 260nm is 1/5 for this sensor. Multiply by 10 to convert to mW, as per the spec sheet
+    //multiply by 5 because the responisivity at around 260nm is 1/5 for this sensor. Multiply by 10 to convert to uW, as per the spec sheet
     total = total + readings; //total readings together
   }
-  // calculate the average, Converts Photocurrent Value to UV Intensity, mW/cm^2 (1uA = 9 mW/cm^2)
+  // calculate the average, Converts Photocurrent Value to UV Intensity, uW/cm^2 (1uA = 9 mW/cm^2), as per spec sheet
   Average = ((total / numReadings) * 9);
-  Serial.print(Average);
-  Serial.println("uW/cm^2");
   return (Average);
 }
