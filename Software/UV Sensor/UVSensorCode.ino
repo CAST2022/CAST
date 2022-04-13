@@ -32,7 +32,7 @@ void setup()
 void loop()
 {
   //loop to signify UV is in area. Under 150 mW/cm^2 indicates no UV
-  while (Average < 10000 && Finished != 1)
+  while (Average < 300 && Finished != 1)
   {
     smoothing(); //input function
 
@@ -51,7 +51,7 @@ void loop()
     }
   }
 
-  while (Average >= 10000 && Finished != 1) //150 uW/cm^2 is the minimum for UV intensity to blink green LED
+  while (Average >= 300 && Finished != 1) //150 uW/cm^2 is the minimum for UV intensity to blink green LED
   {
     smoothing();
     Reset = 0;
