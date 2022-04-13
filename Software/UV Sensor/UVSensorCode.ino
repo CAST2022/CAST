@@ -26,12 +26,13 @@ void setup()
   // initialize LEDs as an output.
   pinMode(red, OUTPUT);
   pinMode(green, OUTPUT);
+  Serial.begin(9600);
 }
 
 void loop()
 {
   //loop to signify UV is in area. Under 150 mW/cm^2 indicates no UV
-  while (Average < 150 && Finished != 1)
+  while (Average < 10000 && Finished != 1)
   {
     smoothing(); //input function
 
@@ -50,7 +51,7 @@ void loop()
     }
   }
 
-  while (Average >= 150 && Finished != 1) //150 mW/cm^2 is the minimum for UV intensity to blink green LED
+  while (Average >= 10000 && Finished != 1) //150 uW/cm^2 is the minimum for UV intensity to blink green LED
   {
     smoothing();
     Reset = 0;
@@ -61,7 +62,7 @@ void loop()
     digitalWrite(green, LOW);   // turn the Green LED off
     delay(500);
     MainCounter += 1;
-    UVDose = (MainCounter * Average) / 1000;
+    UVDose = (MainCounter * Average)/1000;//divide by 1000 to convert to mJ/cm^2
 
     if (UVDose > UVDoseRequirement) //When value is reached, the code stays on green on.
     {
@@ -81,11 +82,14 @@ float smoothing()
   total = 0;
   for (int count = 0; count < 199; count++)
   {
-    readings = (analogRead(A0)-3)*40; //Reading inputs, subtractting to offset noise
-    //multiply by 4 because the responisivity at around 260nm is 1/4 for this sensor. Multiply by 10 to convert to mW, as per the spec sheet
+    readings = analogRead(A0)-2; //Reading inputs, subtractting to offset noise
+    readings = readings*50;
+    //multiply by 5 because the responisivity at around 260nm is 1/5 for this sensor. Multiply by 10 to convert to mW, as per the spec sheet
     total = total + readings; //total readings together
   }
   // calculate the average, Converts Photocurrent Value to UV Intensity, mW/cm^2 (1uA = 9 mW/cm^2)
   Average = ((total / numReadings) * 9);
+  Serial.print(Average);
+  Serial.println("uW/cm^2");
   return (Average);
 }
